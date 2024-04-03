@@ -1,20 +1,29 @@
+import { nanoid } from "nanoid";
+import css from "./Options.module.css";
+
 export default function Options({
   updateFeedback,
   resetFeedback,
   totalReviews,
+  keys,
 }) {
   return (
-    <>
-      <button name="good" onClick={updateFeedback}>
-        Good
-      </button>
-      <button name="neutral" onClick={updateFeedback}>
-        Neutral
-      </button>
-      <button name="bad" onClick={updateFeedback}>
-        Bad
-      </button>
-      {totalReviews != 0 && <button onClick={resetFeedback}>Reset</button>}
-    </>
+    <div className={css.buttonContainer}>
+      {keys.map((key) => (
+        <button
+          className={css.button17}
+          name={key}
+          key={nanoid()}
+          onClick={updateFeedback}
+        >
+          {key.toUpperCase()}
+        </button>
+      ))}
+      {totalReviews != 0 && (
+        <button className={css.button17} onClick={resetFeedback}>
+          RESET
+        </button>
+      )}
+    </div>
   );
 }

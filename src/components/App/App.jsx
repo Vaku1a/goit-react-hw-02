@@ -1,52 +1,59 @@
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import Options from "../Options/Options";
 import Feedback from "../Feedback/Feedback";
-import Notification from "./Notification/Notification";
+import Notification from "../Notification/Notification";
 
-export default class App extends Component {
-  state = {
+import css from "./App.module.css";
+
+export default function App() {
+  const initialState = {
     good: 0,
     neutral: 0,
     bad: 0,
   };
 
-  updateFeedback = ({ target: { name } }) => {
-    // console.log("e", e.target.name);
-    this.setState((prevState) => ({
+  const [feedback, setFeedback] = useState(() => {
+    const savedData = JSON.parse(localStorage.getItem("feedback"));
+    return savedData || initialState;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("feedback", JSON.stringify(feedback));
+  }, [feedback]);
+
+  const updateFeedback = ({ target: { name } }) => {
+    setFeedback((prevState) => ({
+      ...prevState,
       [name]: prevState[name] + 1,
     }));
   };
 
-  resetFeedback = () => {
-    this.setState({
-      good: 0,
-      neutral: 0,
-      bad: 0,
-    });
+  const resetFeedback = () => {
+    setFeedback(initialState);
   };
 
-  render() {
-    const { good, neutral, bad } = this.state;
-    const totalReviews = good + neutral + bad;
-    const positive = Math.round((good / totalReviews) * 100);
+  const { good, neutral, bad } = feedback;
+  const totalReviews = good + neutral + bad;
+  const positive =
+    totalReviews === 0 ? 0 : Math.round((good / totalReviews) * 100);
 
-    return (
-      <>
-        <h1>Sip Happens Café. </h1>
-        <p>
-          Please leave your feedback about our service by selecting one of the
-          options below.
-        </p>
-        <Options
-          updateFeedback={this.updateFeedback}
-          totalReviews={totalReviews}
-          resetFeedback={this.resetFeedback}
-        ></Options>
-        {totalReviews === 0 && <Notification />}
-        {totalReviews >= 1 && (
-          <Feedback reviews={this.state} positive={positive} />
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      <h1 className={css.title}>Sip Happens Café. </h1>
+      <p className={css.text}>
+        Please leave your feedback about our service by selecting one of the
+        options below.
+      </p>
+      <Options
+        updateFeedback={updateFeedback}
+        totalReviews={totalReviews}
+        resetFeedback={resetFeedback}
+        keys={Object.keys(feedback)}
+      />
+      {totalReviews === 0 && <Notification />}
+      {totalReviews >= 1 && (
+        <Feedback reviews={Object.entries(feedback)} positive={positive} />
+      )}
+    </>
+  );
 }

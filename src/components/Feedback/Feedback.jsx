@@ -1,14 +1,15 @@
-// import { Component } from "react";
+import css from "./Feedback.module.css";
 
-// let counter = 0;
-
-export default function Options({ reviews: { good, neutral, bad }, positive }) {
+export default function Options({ reviews, positive }) {
   return (
-    <>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>Positive: {positive}%</p>
-    </>
+    <div className={css.container}>
+      {reviews.map(([key, value]) => (
+        <p className={css.stat} key={key}>
+          {key.toUpperCase()}: {value}
+        </p>
+      ))}
+
+      <p className={css.stat}>POSITIVE: {positive}%</p>
+    </div>
   );
 }

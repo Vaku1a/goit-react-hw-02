@@ -1,0 +1,14 @@
+.title {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  color: #3c4043;
+  fill: currentcolor;
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+}
+
+.text {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
